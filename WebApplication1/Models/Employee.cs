@@ -11,22 +11,14 @@ namespace WebApplication1.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Employee
     {
         public int EmployeeID { get; set; }
-        [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; }
-        [Required(ErrorMessage = "Last Name is required")]
         public string LastName { get; set; }
-        [Required(ErrorMessage = "Mobile number is required")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Mobile number should be 10 digits")]
         public string MobileNo { get; set; }
-        [Required(ErrorMessage = "Job Title is required")]
         public string JobTitle { get; set; }
-        [Required(ErrorMessage = "Salary is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Salary must be a non-negative value")]
         public Nullable<decimal> Salary { get; set; }
     }
 }

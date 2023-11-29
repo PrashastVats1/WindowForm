@@ -14,14 +14,18 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             errorProvider = new ErrorProvider();
-            toolTip1 = new ToolTip();
+
+            // Populate Job Title dropdown list
+            comboBox1.Items.AddRange(new string[] { "Manager", "Developer", "Analyst", "UI/UX Designer", "HR Manager", "Finance Manager", "Tester" });
+            // Set the DropDownStyle property to DropDownList
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
             {
-                string connectionString = "Data Source=LAPTOP-H3OMMTNN\\SQLEXPRESS;Initial Catalog=WinFormDb;Integrated Security=True";
+                string connectionString = "Data Source=DESKTOP-NGKK7DI;Initial Catalog=WinFormDb;Integrated Security=True";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -35,7 +39,7 @@ namespace WinFormsApp1
                         command.Parameters.AddWithValue("@FirstName", textBox1.Text);
                         command.Parameters.AddWithValue("@LastName", textBox2.Text);
                         command.Parameters.AddWithValue("@MobileNo", textBox3.Text);
-                        command.Parameters.AddWithValue("@JobTitle", textBox4.Text);
+                        command.Parameters.AddWithValue("@JobTitle", comboBox1.SelectedItem.ToString());
                         command.Parameters.AddWithValue("@Salary", decimal.Parse(textBox5.Text));
 
                         command.ExecuteNonQuery();
@@ -70,58 +74,72 @@ namespace WinFormsApp1
         {
             bool isValid = true;
 
-            // Clear previous tool tip text
-            toolTip1.RemoveAll();
+            // Clear previous error provider messages
+            errorProvider.Clear();
 
+            // First Name required
             if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
-                toolTip1.SetToolTip(textBox1, "First Name is required");
+                errorProvider.SetError(textBox1, "First Name is required");
                 isValid = false;
             }
 
+            // Last Name required
             if (string.IsNullOrWhiteSpace(textBox2.Text))
             {
-                toolTip1.SetToolTip(textBox2, "Last Name is required");
+                errorProvider.SetError(textBox2, "Last Name is required");
                 isValid = false;
             }
 
+            // Mobile No required
             if (string.IsNullOrWhiteSpace(textBox3.Text))
             {
-                toolTip1.SetToolTip(textBox3, "Mobile number is required");
+                errorProvider.SetError(textBox3, "Mobile number is required");
                 isValid = false;
             }
-            else if (!Regex.IsMatch(textBox3.Text, @"^\d{10}$"))
+            else if (!Regex.IsMatch(textBox3.Text, @"^\d+$"))
             {
-                toolTip1.SetToolTip(textBox3, "Mobile number should be 10 digits");
+                // Mobile No should have only digits
+                errorProvider.SetError(textBox3, "Input field should have only digits");
+                isValid = false;
+            }
+            else if (textBox3.Text.Length != 10)
+            {
+                // Mobile No should have exactly 10 digits
+                errorProvider.SetError(textBox3, "Input field must have exactly 10 digits");
                 isValid = false;
             }
 
-            if (string.IsNullOrWhiteSpace(textBox4.Text))
+            // Job Title required
+            if (comboBox1.SelectedItem == null)
             {
-                toolTip1.SetToolTip(textBox4, "Job Title is required");
+                errorProvider.SetError(comboBox1, "Job Title is required");
                 isValid = false;
             }
 
+            // Salary required
             if (string.IsNullOrWhiteSpace(textBox5.Text))
             {
-                toolTip1.SetToolTip(textBox5, "Salary is required");
+                errorProvider.SetError(textBox5, "Salary is required");
                 isValid = false;
             }
             else if (!decimal.TryParse(textBox5.Text, out _))
             {
-                toolTip1.SetToolTip(textBox5, "Salary must be a numeric value");
+                // Salary must be a numeric value
+                errorProvider.SetError(textBox5, "Salary must be a numeric value");
                 isValid = false;
             }
             else if (decimal.Parse(textBox5.Text) < 0)
             {
-                toolTip1.SetToolTip(textBox5, "Salary must be a non-negative value");
+                // Salary must be a non-negative value
+                errorProvider.SetError(textBox5, "Salary must be a non-negative value");
                 isValid = false;
             }
 
             // Display the error messages in a visible tooltip
             if (!isValid)
             {
-                toolTip1.Show("Please correct the validation errors.", this, 0, this.Height, 5000);
+                MessageBox.Show("Please correct the validation errors.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return isValid;

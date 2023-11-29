@@ -5,10 +5,10 @@
       <PropertyRef Name="EmployeeID" />
     </Key>
     <Property Name="EmployeeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="FirstName" Type="varchar" MaxLength="50" />
-    <Property Name="LastName" Type="varchar" MaxLength="50" />
-    <Property Name="MobileNo" Type="varchar" MaxLength="15" />
-    <Property Name="JobTitle" Type="varchar" MaxLength="100" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="MobileNo" Type="nvarchar" MaxLength="15" />
+    <Property Name="JobTitle" Type="nvarchar" MaxLength="100" />
     <Property Name="Salary" Type="decimal" Precision="10" Scale="2" />
   </EntityType>
   <EntityContainer Name="WinFormDbModelStoreContainer">
